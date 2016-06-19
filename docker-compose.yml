@@ -7,6 +7,7 @@ services:
     command: node_modules/.bin/nodemon app.js
     environment:
       NODE_ENV: development
+    env_file: .env
     ports:
       - '30002:3000'
     volumes:
