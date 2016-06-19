@@ -4,7 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # env_file: env_file
     ports:
       - '30002:3000'
     volumes:
