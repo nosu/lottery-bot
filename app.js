@@ -18,11 +18,10 @@ app.post('/callback', (req, res) => {
       // if the session doesn't exist
       const content = msg.content;
       const persons = content.split('\n');
-      console.log('req.body: ', body);
       console.log('content: ', content);
       if(persons.length >= 2) {
-        addSessionTimer(msg.content.from, sessionExpire);
-        const newMsg = persons.reduce((prev, cur) => { return prev + cur + "さん, "}, "") + "から何人選びますか？";
+        addSessionTimer(msg.content.from, SESSION_EXPIRE);
+        const newMsg = persons.reduce((prev, cur) => { return (prev + cur + "さん, "); }, "") + "から何人選びますか？";
         sendMessage({
           to: msg.content.from,
           toChannel: 1383378250, // Fixed value
@@ -43,12 +42,13 @@ app.post('/callback', (req, res) => {
       // if the session exists
       res.send('OK');
     }
+  });
 });
 
 const addSessionTimer = (id, expire) => {
   session[id] = true;
   setTimeout(() => { delete session[id]; }, expire);
-}
+};
 
 const sendMessage = (content) => {
   return new Promise((resolve, reject) => {
@@ -74,4 +74,3 @@ const sendMessage = (content) => {
 app.listen(3000, () => {
   console.log('Listening on port 3000');
 });
-
