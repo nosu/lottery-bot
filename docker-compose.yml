@@ -4,6 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    command: node_modules/.bin/nodemon app.js
+    environment:
+      NODE_ENV: development
     ports:
       - '30002:3000'
     volumes:
