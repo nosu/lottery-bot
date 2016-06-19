@@ -9,6 +9,8 @@
 3. `$ docker-compose build`
 4. `$ docker-compose up`
 
+※HOST側のポートが30002になっているので、`docker-compose.yml`の`ports`を適宜変更してください
+
 ## 使い方
 1. BOT宛に、名前を改行区切りで送る（e.g. "山田\n田中\n佐藤"）
 2. 人数を聞かれるので、当たりにした人数を半角数字で送る（e.g. "1"）
