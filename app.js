@@ -6,15 +6,15 @@ const request    = require('request');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const SESSION_EXPIRE = 20000; // 20 seconds
 const BASE_URI = "https://trialbot-api.line.me";
 const SEND_URI = BASE_URI + '/v1/events';
 
 /**
- * "session" stores who sent the message and the list of the person names.
+ * "session" stores the id who sent the message and the list of the person names.
  * Each session will be deleted automatically SESSION_EXPIRE mil seconds later.
  * Example: { ubcf6832fae5a186d9b8ac7261e3ff000: ['John', 'Doe'] }
  */
+const SESSION_EXPIRE = 20000; // 20 seconds
 let session = {};
 
 app.post('/callback', (req, res) => {
