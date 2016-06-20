@@ -10,8 +10,8 @@ const BASE_URI = "https://trialbot-api.line.me";
 const SEND_URI = BASE_URI + '/v1/events';
 
 /**
- * "session" stores the id who sent the message and the list of the person names.
- * Each session will be deleted automatically SESSION_EXPIRE mil seconds later.
+ * The session stores the id who sent the message and the list of the person names.
+ * Each session will be deleted automatically SESSION_EXPIRE(ms) later.
  * Example: { ubcf6832fae5a186d9b8ac7261e3ff000: ['John', 'Doe'] }
  */
 const SESSION_EXPIRE = 20000; // 20 seconds
@@ -25,7 +25,7 @@ app.post('/callback', (req, res) => {
       console.log('content: ', msg.content);
       const persons = msg.content.text.split('\n').map(p => p.trim());
       if(persons.length >= 2) {
-        addSessionTimer(msg.content.from, persons, SESSION_EXPIRE);
+        addSessionWithTimer(msg.content.from, persons, SESSION_EXPIRE);
         const newMsg = `${persons.join("さん, ")}さんから何人選ぶ？数字で教えてー`;
         console.log('sendMessage');
         sendMessage(newMsg, [msg.content.from]);
@@ -45,7 +45,7 @@ app.post('/callback', (req, res) => {
         sendMessage(newMsg, [msg.content.from]);
       } else {
         const winners = chooseRandomItems(persons, 1);
-        const newMsg = `よくわからないから1人だけ選んだ結果…n${winnes[0]}さんが当たりだよ！`;
+        const newMsg = `よくわからないから1人だけ選んだ結果…\n${winners[0]}さんが当たりだよ！`;
         sendMessage(newMsg, [msg.content.from]);
       }
       deleteSession(msg.content.from);
@@ -54,7 +54,7 @@ app.post('/callback', (req, res) => {
   res.send('OK');
 });
 
-const addSessionTimer = (id, persons, expire) => {
+const addSessionWithTimer = (id, persons, expire) => {
   session[id] = persons;
   setTimeout(deleteSession.bind(null, id), expire);
 };
@@ -75,7 +75,7 @@ const chooseRandomItems = (array, number) => {
     a.splice(i, 1);
   }
   return r;
-}
+};
 
 const sendMessage = (text, toId) => {
   return new Promise((resolve, reject) => {
