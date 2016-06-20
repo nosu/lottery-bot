@@ -10,17 +10,17 @@ const BASE_URI = "https://trialbot-api.line.me";
 const SEND_URI = BASE_URI + '/v1/events';
 
 /**
- * The session stores the id who sent the message and the list of the person names.
+ * The sessions obj stores the id who sent the message and the list of the person names.
  * Each session will be deleted automatically SESSION_EXPIRE(ms) later.
  * Example: { ubcf6832fae5a186d9b8ac7261e3ff000: ['John', 'Doe'] }
  */
 const SESSION_EXPIRE = 20000; // 20 seconds
-let session = {};
+let sessions = {};
 
 app.post('/callback', (req, res) => {
   const body = req.body;
   body.result.forEach((msg) => {
-    if(!session[msg.content.from]) {
+    if(!sessions[msg.content.from]) {
       // if the session doesn't exist
       console.log('content: ', msg.content);
       const persons = msg.content.text.split('\n').map(p => p.trim());
@@ -35,9 +35,9 @@ app.post('/callback', (req, res) => {
       }
     } else {
       // if the session exists
-      console.log('session: ', session);
+      console.log('sessions: ', sessions);
       const matchResult = msg.content.text.match(/([0-9]+)/);
-      const persons = session[msg.content.from];
+      const persons = sessions[msg.content.from];
       if(matchResult) {
         const numberOfWinners = parseInt(matchResult[0]);
         const winners = chooseRandomItems(persons, numberOfWinners);
@@ -55,13 +55,13 @@ app.post('/callback', (req, res) => {
 });
 
 const addSessionWithTimer = (id, persons, expire) => {
-  session[id] = persons;
+  sessions[id] = persons;
   setTimeout(deleteSession.bind(null, id), expire);
 };
 
 const deleteSession = (id) => {
   console.log(`The session <${id}> is deleted.`);
-  delete session[id];
+  delete sessions[id];
 };
 
 const chooseRandomItems = (array, number) => {
