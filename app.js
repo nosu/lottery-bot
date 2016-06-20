@@ -27,7 +27,6 @@ app.post('/callback', (req, res) => {
       if(persons.length >= 2) {
         addSessionWithTimer(msg.content.from, persons, SESSION_EXPIRE);
         const newMsg = `${persons.join("さん, ")}さんから何人選ぶ？数字で教えてー`;
-        console.log('sendMessage');
         sendMessage(newMsg, [msg.content.from]);
       } else {
         const newMsg = "1人だけじゃ抽選できないよ！";
